@@ -22,7 +22,7 @@ class comicsTransformer extends JsonResource
             'date'    => ( isset($this->dated_at) && is_a($this->dated_at, Carbon::class) ) ? $this->dated_at->toDateString() : '',
             'name'    => $this->item['title'] ?? '',
             'link'    => $this->item['img'] ?? '',
-            'details' => $this->item['transcript'] ?? '',
+            'details' => $this->item['alt'] ?? '',
         ];
 
         return $data;
