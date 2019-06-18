@@ -31,7 +31,7 @@ and [Laravel 5.8+](https://laravel.com/docs/5.8).
 
 1.  You will need the following from your Sysops team
 - The IP, username and password to SSH to your webserver instance.
-- The IP, username and password to you MySql instance.
+- The IP, username and password to your MySql instance.
 - The root path of the folder served by your Nginx server.
 2. Connect to your server with SSH and navigate to the Nginx folder for the website in question.
 ```
@@ -64,7 +64,7 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
-You should now be able to navigate to your new site. Using https://your.domain/api/query/<source-slug>
+You should now be able to navigate to your new site. The home page will have links to the 2 sample feeds.
 
 ## Adding new feeds.
 
@@ -73,19 +73,19 @@ Be sure to follow the file naming conventions.
 In order to add new feeds to the system, you will need to:
 
 1. Create a new Service.
-- In \app\Services copy ComicsService.php for API's with content delivered one at record at a time or 
+- In \app\Services copy ComicsService.php for API's with content delivered one record at a time or 
 copy ComicsService.php for APIs that deliver content in collections and alter as needed.
 
 
-2. Add the service to  \App\Providers\AppServiceProvider.php
-- Register the new service using spaceService & comicService as a guide.
+2. Add the service to  \app\Providers\AppServiceProvider.php
+- Register the new service in the 'register' function using spaceService & comicService as a guide.
 
 
 3. Create a new Transformer.
-- in \app\Http\Resources copy and alter a pre-existing transformer to your needs. Mapping the required fields from the source API to the standard fields to ensure normalisation.
+- in \app\Http\Resources copy and alter a pre-existing transformer to your needs. Mapping the required fields from the source API to the standard fields to ensure normalisation. N.B. the file should be named <slug>Transformer.
 
 4. Set the config in your .env file.
-- Add a new set of configs (using an existing source as a guide) to the .env file. Take note that the value of <SOURCE>_SLUG is what determines the source in the API query url as well as the naming convention of files.
+- Add a new set of configs (using an existing source as a guide) to the .env file. Take note that the value of NEW-SOURCE_SLUG is what determines the source in the API query url as well as the naming convention of files. e.g. http://my.domain/api/query/[slug/source]?year=2019&limit=25&offset=25
 
 5. Create a new record in the MySQL database "sources" table using existing records as a guide.
 
