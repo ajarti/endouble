@@ -76,7 +76,7 @@
                     <a href="/api/query/comics?year=2019&limit=10">XKCD - Comics</a>
                 </div>
                 <p style="font-size: 0.8em; margin-top: 30px; color: #818182 ">
-                    <em><strong>TIP:</strong> You can alter the parameters year, limit, offset to customise your feed.</em>
+                    <em><strong>TIP:</strong> You can alter the parameters year, limit & offset to customise your feed.</em>
                 </p>
             </div>
         </div>
