@@ -80,9 +80,23 @@ class SourceController extends Controller
 
         // Return the requested items using query params.
         $this->cache->resetFilters();
-        $this->cache->setQueryOffset($request->get('offset', 0));
-        $this->cache->setQueryLimit($request->get('limit', env('SOURCE_LIMIT', 10)));
-        $this->cache->setQueryYear($request->get('year', null));
+
+        // Offset.
+        if ( $request->has('offset') ) {
+            $this->cache->setQueryOffset($request->get('offset', 0));
+        }
+
+        // Limit.
+        if ( $request->has('limit') ) {
+            $this->cache->setQueryLimit($request->get('limit', env('SOURCE_LIMIT', 10)));
+        }
+
+        // Year.
+        if ( $request->has('year') ) {
+            $this->cache->setQueryYear($request->get('year'));
+        }
+
+        // Transform response.
         return $this->transformer::collection($this->cache->getFromCache($this->source->id))->additional([
             'meta' => [
                 'request'   => [
