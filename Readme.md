@@ -1,10 +1,22 @@
 # EnDouble (API Normaliser)
 
-The application allows one to create a API service with a standardised interface to 3rd Party API.
+The application allows one to create a API service with a standardised interface to 3rd Party API. 
+
+In order to ensure this normalising proxy is not too onerous on the 3rd Party APIs, 
+it uses a caching mechanism to store the data in a local MySql table.  Currently the system will check the remote API for the latest index on each call and only update the cache with the new items if there is a change,
+this introduces a second or so lag to the query. 
+This could be altered to update via a cron schedule to reduce the "latency", bandwidth and resources usage, 
+but this would obviously come at the expense of the freshness of the results. 
+
+The system is written to allow you to swap out the transport layer, it currently uses [GuzzleHttp PSR7](http://docs.guzzlephp.org/en/stable/psr7.html)
+ with multiple concurrent connections to the source APIs to improve cache update speeds. 
+You can also swap out the caching later which is currently configured to use Laravel's Eloquent(DB ORM). 
+
+You can see a live DEMO of this system at: https://endouble.ajarti.com
 
 ## Getting Started
 I would suggest making use of [Laravel Forge](https://forge.laravel.com/) to smooth this process. 
-Alternatively you can get your Sysop to provide you a server running with the services specified below in 
+Alternatively you can get your Sysop team to provide you a server running with the services specified below in 
 prerequisites.
 
 
@@ -16,7 +28,6 @@ To get this application up and running you will need an [Nginx](http://nginx.org
 and [Laravel 5.8+](https://laravel.com/docs/5.8).  
 
 ### Installing
-
 
 1.  You will need the following from your Sysops team
 - The IP, username and password to SSH to your webserver instance.
@@ -53,14 +64,31 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
+You should now be able to navigate to your new site. Using https://your.domain/api/query/<source-slug>
 
 ## Adding new feeds.
 
+Given the variety of possible API interfaces and structures, it is impossible to provide a generic automated solution to add a new API to sources. 
+Be sure to follow the file naming conventions.
 In order to add new feeds to the system, you will need to:
 
-1.
+1. Create a new Service.
+- In \app\Services copy ComicsService.php for API's with content delivered one at record at a time or 
+copy ComicsService.php for APIs that deliver content in collections and alter as needed.
 
-2.
+
+2. Add the service to  \App\Providers\AppServiceProvider.php
+- Register the new service using spaceService & comicService as a guide.
+
+
+3. Create a new Transformer.
+- in \app\Http\Resources copy and alter a pre-existing transformer to your needs. Mapping the required fields from the source API to the standard fields to ensure normalisation.
+
+4. Set the config in your .env file.
+- Add a new set of configs (using an existing source as a guide) to the .env file. Take note that the value of <SOURCE>_SLUG is what determines the source in the API query url as well as the naming convention of files.
+
+5. Create a new record in the MySQL database "sources" table using existing records as a guide.
+
 
 ## Built With
 Link provide installation instructions.
